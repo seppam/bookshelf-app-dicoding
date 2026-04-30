@@ -39,22 +39,19 @@ function renderBooks(searchQuery = '') {
 
   const incompleteList = document.getElementById('incompleteBookList');
   const completeList = document.getElementById('completeBookList');
-
   if (!incompleteList || !completeList) return;
 
   incompleteList.innerHTML = '';
   completeList.innerHTML = '';
 
-  // Show "empty" placeholder when no books
-  const emptyIncomplete = document.createElement('div');
-  emptyIncomplete.style.cssText =
-    'text-align:center; color:#888; padding:20px; font-style:italic;';
+  // Empty-state placeholders
+  const emptyIncomplete = document.createElement('p');
+  emptyIncomplete.classList.add('empty-shelf');
   emptyIncomplete.textContent = 'Tidak ada buku';
   incompleteList.appendChild(emptyIncomplete);
 
-  const emptyComplete = document.createElement('div');
-  emptyComplete.style.cssText =
-    'text-align:center; color:#888; padding:20px; font-style:italic;';
+  const emptyComplete = document.createElement('p');
+  emptyComplete.classList.add('empty-shelf');
   emptyComplete.textContent = 'Tidak ada buku';
   completeList.appendChild(emptyComplete);
 
@@ -62,115 +59,72 @@ function renderBooks(searchQuery = '') {
   let hasComplete = false;
 
   for (const book of books) {
-    const titleMatch =
-      query === '' || book.title.toLowerCase().includes(query);
-
+    const titleMatch = query === '' || book.title.toLowerCase().includes(query);
     if (!titleMatch) continue;
 
     const bookEl = createBookElement(book);
 
     if (book.isComplete) {
-      if (hasComplete) {
-        // Remove empty placeholder
-        completeList.innerHTML = '';
+      if (!hasComplete) {
+        const ph = completeList.querySelector('.empty-shelf');
+        if (ph) ph.remove();
       }
       completeList.appendChild(bookEl);
       hasComplete = true;
     } else {
-      if (hasIncomplete) {
-        // Remove empty placeholder
-        incompleteList.innerHTML = '';
+      if (!hasIncomplete) {
+        const ph = incompleteList.querySelector('.empty-shelf');
+        if (ph) ph.remove();
       }
       incompleteList.appendChild(bookEl);
       hasIncomplete = true;
     }
   }
-
-  // Clean up empty placeholders
-  if (hasIncomplete) {
-    const placeholder = incompleteList.querySelector('div[style]');
-    if (placeholder) placeholder.remove();
-  }
-  if (hasComplete) {
-    const placeholder = completeList.querySelector('div[style]');
-    if (placeholder) placeholder.remove();
-  }
 }
 
 function createBookElement(book) {
   const container = document.createElement('div');
+  container.classList.add('book-item');
   container.setAttribute('data-bookid', book.id);
   container.setAttribute('data-testid', 'bookItem');
-  container.style.cssText =
-    'border:1px solid #ddd; border-radius:8px; padding:16px; margin-bottom:12px; background:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.05);';
 
   const title = document.createElement('h3');
   title.setAttribute('data-testid', 'bookItemTitle');
   title.textContent = book.title;
-  title.style.cssText =
-    'margin:0 0 8px 0; font-size:1.1rem; color:#333;';
+  title.classList.add('book-item__title');
 
   const author = document.createElement('p');
   author.setAttribute('data-testid', 'bookItemAuthor');
   author.textContent = `Penulis: ${book.author}`;
-  author.style.cssText = 'margin:0 0 4px 0; font-size:0.9rem; color:#666;';
+  author.classList.add('book-item__author');
 
   const year = document.createElement('p');
   year.setAttribute('data-testid', 'bookItemYear');
   year.textContent = `Tahun: ${book.year}`;
-  year.style.cssText = 'margin:0 0 12px 0; font-size:0.9rem; color:#666;';
+  year.classList.add('book-item__year');
 
   const btnGroup = document.createElement('div');
-  btnGroup.style.cssText = 'display:flex; gap:8px; flex-wrap:wrap;';
+  btnGroup.classList.add('book-item__actions');
 
   // Move / Complete button
   const moveBtn = document.createElement('button');
   moveBtn.setAttribute('data-testid', 'bookItemIsCompleteButton');
-  moveBtn.textContent = book.isComplete
-    ? 'Belum selesai dibaca'
-    : 'Selesai dibaca';
-  moveBtn.style.cssText =
-    'padding:6px 14px; border:1px solid #0d47a1; background:#fff; color:#0d47a1; border-radius:4px; cursor:pointer; font-size:0.85rem; border-radius:20px; transition:all 0.2s;';
-  moveBtn.addEventListener('mouseenter', () => {
-    moveBtn.style.background = '#0d47a1';
-    moveBtn.style.color = '#fff';
-  });
-  moveBtn.addEventListener('mouseleave', () => {
-    moveBtn.style.background = '#fff';
-    moveBtn.style.color = '#0d47a1';
-  });
+  moveBtn.textContent = book.isComplete ? 'Belum selesai dibaca' : 'Selesai dibaca';
+  moveBtn.classList.add('btn', 'btn--move');
   moveBtn.addEventListener('click', () => toggleBookComplete(book.id));
 
   // Delete button
   const deleteBtn = document.createElement('button');
   deleteBtn.setAttribute('data-testid', 'bookItemDeleteButton');
   deleteBtn.textContent = 'Hapus Buku';
-  deleteBtn.style.cssText =
-    'padding:6px 14px; border:1px solid #c62828; background:#fff; color:#c62828; border-radius:4px; cursor:pointer; font-size:0.85rem; border-radius:20px; transition:all 0.2s;';
-  deleteBtn.addEventListener('mouseenter', () => {
-    deleteBtn.style.background = '#c62828';
-    deleteBtn.style.color = '#fff';
-  });
-  deleteBtn.addEventListener('mouseleave', () => {
-    deleteBtn.style.background = '#fff';
-    deleteBtn.style.color = '#c62828';
-  });
+  deleteBtn.classList.add('btn', 'btn--delete');
   deleteBtn.addEventListener('click', () => deleteBook(book.id));
 
   // Edit button
   const editBtn = document.createElement('button');
   editBtn.setAttribute('data-testid', 'bookItemEditButton');
   editBtn.textContent = 'Edit Buku';
-  editBtn.style.cssText =
-    'padding:6px 14px; border:1px solid #f57f17; background:#fff; color:#f57f17; border-radius:4px; cursor:pointer; font-size:0.85rem; border-radius:20px; transition:all 0.2s;';
-  editBtn.addEventListener('mouseenter', () => {
-    editBtn.style.background = '#f57f17';
-    editBtn.style.color = '#fff';
-  });
-  editBtn.addEventListener('mouseleave', () => {
-    editBtn.style.background = '#fff';
-    editBtn.style.color = '#f57f17';
-  });
+  editBtn.classList.add('btn', 'btn--edit');
   editBtn.addEventListener('click', () => openEditModal(book));
 
   btnGroup.appendChild(moveBtn);
@@ -217,8 +171,7 @@ function deleteBook(bookId) {
     'Apakah Anda yakin ingin menghapus buku ini?'
   );
   if (!confirmed) return;
-  const books = getBooks().filter((b) => b.id !== bookId);
-  saveBooks(books);
+  saveBooks(getBooks().filter((b) => b.id !== bookId));
   renderBooks(getCurrentSearchQuery());
 }
 
@@ -240,55 +193,42 @@ function getCurrentSearchQuery() {
 }
 
 // ============================================================
-// Modal (Edit Book)
+// Edit Modal
 // ============================================================
 
 function openEditModal(book) {
-  // Remove existing modal if any
   closeEditModal();
 
   const overlay = document.createElement('div');
   overlay.id = 'editModalOverlay';
-  overlay.style.cssText =
-    'position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000;';
 
   const modal = document.createElement('div');
-  modal.style.cssText =
-    'background:#fff; border-radius:12px; padding:28px; width:90%; max-width:420px; box-shadow:0 8px 32px rgba(0,0,0,0.2);';
 
-  const title = document.createElement('h2');
-  title.textContent = 'Edit Buku';
-  title.style.cssText =
-    'margin:0 0 20px 0; font-size:1.3rem; color:#333;';
+  const heading = document.createElement('h2');
+  heading.textContent = 'Edit Buku';
 
   const form = document.createElement('form');
   form.id = 'editBookForm';
 
-  function inputField(id, label, type, value, required) {
+  function makeField(id, labelText, type, value, required) {
     const row = document.createElement('div');
-    row.style.cssText = 'margin-bottom:14px;';
+    row.classList.add('form-row');
 
     const lbl = document.createElement('label');
     lbl.setAttribute('for', id);
-    lbl.textContent = label;
-    lbl.style.cssText = 'display:block; margin-bottom:4px; font-weight:600; font-size:0.9rem; color:#444;';
+    lbl.textContent = labelText;
 
     const inp = document.createElement('input');
     inp.id = id;
     inp.type = type;
     inp.value = value;
     inp.required = required;
-    inp.setAttribute('data-testid', `editBook${label.replace(' ', '')}Input`);
-    inp.style.cssText =
-      'width:100%; padding:8px 12px; border:1px solid #ddd; border-radius:6px; font-size:0.95rem; box-sizing:border-box;';
+    inp.setAttribute('data-testid', `editBook${labelText.replace(' ', '')}Input`);
+
     if (type === 'checkbox') {
-      inp.style.cssText =
-        'width:auto; margin-right:8px; display:inline-block; vertical-align:middle;';
-      const wrapper = document.createElement('div');
-      wrapper.style.cssText = 'display:flex; align-items:center;';
-      wrapper.appendChild(inp);
-      wrapper.appendChild(lbl);
-      row.appendChild(wrapper);
+      row.classList.add('form-row--checkbox');
+      row.appendChild(inp);
+      row.appendChild(lbl);
     } else {
       row.appendChild(lbl);
       row.appendChild(inp);
@@ -297,27 +237,25 @@ function openEditModal(book) {
     return { row, inp };
   }
 
-  const titleRow = inputField('editTitle', 'Judul', 'text', book.title, true);
-  const authorRow = inputField('editAuthor', 'Penulis', 'text', book.author, true);
-  const yearRow = inputField('editYear', 'Tahun', 'number', book.year, true);
-  const isCompleteRow = inputField('editIsComplete', 'Selesai dibaca', 'checkbox', '', false);
+  const titleRow = makeField('editTitle', 'Judul', 'text', book.title, true);
+  const authorRow = makeField('editAuthor', 'Penulis', 'text', book.author, true);
+  const yearRow = makeField('editYear', 'Tahun', 'number', book.year, true);
+  const isCompleteRow = makeField('editIsComplete', 'Selesai dibaca', 'checkbox', '', false);
+  isCompleteRow.inp.checked = book.isComplete;
 
   const btnRow = document.createElement('div');
-  btnRow.style.cssText = 'display:flex; gap:10px; margin-top:20px;';
+  btnRow.classList.add('btn-row');
 
   const saveBtn = document.createElement('button');
   saveBtn.type = 'submit';
   saveBtn.textContent = 'Simpan';
+  saveBtn.id = 'editBookSubmitButton';
   saveBtn.setAttribute('data-testid', 'editBookSubmitButton');
-  saveBtn.style.cssText =
-    'flex:1; padding:10px; background:#0d47a1; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:1rem; font-weight:600;';
 
   const cancelBtn = document.createElement('button');
   cancelBtn.type = 'button';
+  cancelBtn.id = 'cancelEditButton';
   cancelBtn.textContent = 'Batal';
-  cancelBtn.style.cssText =
-    'flex:1; padding:10px; background:#fff; color:#666; border:1px solid #ddd; border-radius:6px; cursor:pointer; font-size:1rem;';
-
   cancelBtn.addEventListener('click', closeEditModal);
 
   btnRow.appendChild(saveBtn);
@@ -341,7 +279,7 @@ function openEditModal(book) {
     closeEditModal();
   });
 
-  modal.appendChild(title);
+  modal.appendChild(heading);
   modal.appendChild(form);
   overlay.appendChild(modal);
 
@@ -351,8 +289,6 @@ function openEditModal(book) {
 
   document.body.appendChild(overlay);
   titleRow.inp.focus();
-
-  // ESC key to close
   document.addEventListener('keydown', handleEscape);
 }
 
@@ -373,7 +309,6 @@ function handleEscape(e) {
 // ============================================================
 
 function initForms() {
-  // Add book form
   const bookForm = document.getElementById('bookForm');
   if (bookForm) {
     bookForm.addEventListener('submit', (e) => {
@@ -382,17 +317,15 @@ function initForms() {
       const author = document.getElementById('bookFormAuthor')?.value || '';
       const year = document.getElementById('bookFormYear')?.value || '';
       const isComplete = document.getElementById('bookFormIsComplete')?.checked || false;
-
       addBook(title, author, year, isComplete);
       bookForm.reset();
     });
   }
 
-  // Update submit button text based on checkbox
+  // Update submit button text when checkbox changes
   const checkbox = document.getElementById('bookFormIsComplete');
   const submitBtn = document.getElementById('bookFormSubmit');
   const spanEl = submitBtn?.querySelector('span');
-
   if (checkbox && submitBtn) {
     checkbox.addEventListener('change', () => {
       if (spanEl) {
@@ -406,16 +339,13 @@ function initForms() {
   // Search form
   const searchForm = document.getElementById('searchBook');
   const searchInput = document.getElementById('searchBookTitle');
-
   if (searchForm) {
     searchForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const query = searchInput?.value || '';
-      renderBooks(query);
+      renderBooks(searchInput?.value || '');
     });
   }
-
-  // Live search (optional — updates as user types)
+  // Live search as user types
   if (searchInput) {
     searchInput.addEventListener('input', () => {
       renderBooks(searchInput.value);
@@ -432,7 +362,6 @@ function init() {
   initForms();
 }
 
-// Run when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {

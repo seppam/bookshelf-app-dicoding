@@ -1,0 +1,305 @@
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+header {
+  background: linear-gradient(135deg, #0d47a1, #1976d2);
+  color: #fff;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ── Main layout ── */
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0d47a1;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e3f2fd;
+}
+
+/* ── Form elements ── */
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25,118,210,0.12);
+}
+
+/* ── Add book form ── */
+#bookForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+#bookForm > div {
+  display: flex;
+  flex-direction: column;
+}
+#bookFormIsCompleteRow {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px;
+}
+#bookFormIsCompleteRow label {
+  margin-bottom: 0;
+}
+#bookFormIsComplete {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #0d47a1;
+}
+#bookFormSubmit {
+  margin-top: 4px;
+  padding: 12px;
+  background: #0d47a1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+#bookFormSubmit:hover { background: #1565c0; }
+#bookFormSubmit:active { background: #0d47a1; }
+
+/* ── Search form ── */
+#searchBook {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+#searchBook > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+#searchSubmit {
+  padding: 9px 20px;
+  background: #fff;
+  border: 1.5px solid #0d47a1;
+  color: #0d47a1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+#searchSubmit:hover {
+  background: #0d47a1;
+  color: #fff;
+}
+
+/* ── Book list ── */
+#incompleteBookList,
+#completeBookList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Empty state ── */
+.empty-shelf {
+  text-align: center;
+  color: #aaa;
+  padding: 32px 16px;
+  font-style: italic;
+  font-size: 0.9rem;
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  margin: 4px 0;
+}
+
+/* ── Book item ── */
+.book-item {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: box-shadow 0.2s;
+}
+.book-item:hover {
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+.book-item__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 4px;
+}
+.book-item__author,
+.book-item__year {
+  font-size: 0.88rem;
+  color: #666;
+  margin: 2px 0;
+}
+
+/* ── Book item buttons ── */
+.book-item__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1.5px solid;
+  background: #fff;
+  transition: all 0.2s;
+}
+.btn--move {
+  border-color: #0d47a1;
+  color: #0d47a1;
+}
+.btn--move:hover {
+  background: #0d47a1;
+  color: #fff;
+}
+.btn--delete {
+  border-color: #c62828;
+  color: #c62828;
+}
+.btn--delete:hover {
+  background: #c62828;
+  color: #fff;
+}
+.btn--edit {
+  border-color: #f57f17;
+  color: #f57f17;
+}
+.btn--edit:hover {
+  background: #f57f17;
+  color: #fff;
+}
+
+/* ── Edit Modal ── */
+#editModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+#editBookForm {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+#editBookForm > h2 {
+  margin-bottom: 4px;
+  color: #333;
+  font-size: 1.25rem;
+}
+#editBookForm .form-row {
+  display: flex;
+  flex-direction: column;
+}
+#editBookForm .form-row label {
+  margin-bottom: 4px;
+}
+#editBookForm .btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+#editBookSubmitButton {
+  flex: 1;
+  padding: 10px;
+  background: #0d47a1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+#editBookSubmitButton:hover { background: #1565c0; }
+#cancelEditButton {
+  flex: 1;
+  padding: 10px;
+  background: #fff;
+  color: #666;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+#cancelEditButton:hover { background: #f5f5f5; }
+#editIsCompleteRow {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px;
+}
+#editIsCompleteRow label { margin-bottom: 0; }
+#editIsComplete {
+  width: 18px;
+  height: 18px;
+  accent-color: #0d47a1;
+  cursor: pointer;
+}
